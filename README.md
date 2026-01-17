@@ -1,8 +1,8 @@
 # AWS Simple SMTP Server (C Implementation)
-
+## Recieving
 A guide to deploying a raw C-based SMTP server on AWS EC2 to receive real emails from Gmail/Outlook.
 
-## Prerequisites
+### Prerequisites
 1.  **AWS Account** (Free Tier eligible).
 2.  **Domain Name** (GoDaddy, Namecheap, etc.) hooked up to Cloudflare (optional but recommended).
 
@@ -20,7 +20,7 @@ A guide to deploying a raw C-based SMTP server on AWS EC2 to receive real emails
 
 ---
 
-## Phase 2: Open Port 25 (The Firewall)
+### Phase 2: Open Port 25 (The Firewall)
 AWS blocks email traffic by default. You must open the door.
 
 1.  In EC2 Dashboard, click your **Instance ID**.
@@ -33,10 +33,26 @@ AWS blocks email traffic by default. You must open the door.
 
 ---
 
-## Phase 3: Server Configuration
+### Phase 3: Server Configuration
 Connect to your server using **EC2 Instance Connect** (Browser) or SSH.
 
 ### 1. Update & Install GCC (Compiler)
 ```bash
 sudo apt update
 sudo apt install gcc -y
+gcc server.c -o myserver -pthread
+```
+
+## Sending Emails (SMTP Client)
+
+### 1. Install Dependencies
+The sender requires `libcurl` for SSL/TLS.
+
+```bash
+# Ubuntu/Debian
+sudo apt install libcurl4-openssl-dev -y
+# Amazon Linux/CentOS
+sudo yum install libcurl-devel -y
+gcc -o sender sender.c -lcurl
+./sender
+```
